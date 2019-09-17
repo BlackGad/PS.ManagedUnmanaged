@@ -1,0 +1,26 @@
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	local,
+	uuid(5494BFCB-F321-4815-8D48-77CBC12CB950),
+	pointer_default(unique)
+]
+interface IMemoryAllocator: IUnknown
+{
+	HRESULT Function1([in]BSTR key,[in]VARIANT value);
+	[propget]HRESULT Property1([out,retval]int* value);
+	[propput]HRESULT Property1([in]int value);
+};
+
+[uuid(F98005AB-554F-4CED-ACF0-66364A1EBA4F)]
+library UnmanagedLibrary
+{
+	[uuid(8FB509AE-500E-44C0-9E83-2233A80838F0)]
+	coclass CMemoryAllocator
+	{
+		[default]
+		interface IMemoryAllocator;
+	}
+}
