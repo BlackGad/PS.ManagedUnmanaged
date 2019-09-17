@@ -1,17 +1,36 @@
 #pragma once
 
 #include "UnmanagedAPI.h"
+#include "MemoryBlock.h"
 
-class MemoryAllocator : public ps::com::C_Unknown, IMemoryAllocator
+namespace objects
 {
-public:
-	INTERFACE_MAP_BEGIN(ps::com::C_Unknown)
-		INTERFACE_ENTRY(IMemoryAllocator)
-	INTERFACE_MAP_END()
-	
-public://IMemoryAllocator
-	STDMETHOD(Function1)(BSTR key,VARIANT value);
-	STDMETHOD(get_Property1)(int* value);
-	STDMETHOD(put_Property1)(int value);
-};
+	class MemoryAllocator final : public ps::com::C_Unknown, IMemoryAllocator
+	{
+	public:
+		MemoryAllocator()
+		{
+			std::cout << "INFO: MemoryAllocator created" << std::endl;
+		}
+
+		virtual ~MemoryAllocator()
+		{
+			std::cout << "INFO: MemoryAllocator destroyed" << std::endl;
+		}
+
+		INTERFACE_MAP_BEGIN(ps::com::C_Unknown)
+			INTERFACE_ENTRY(IMemoryAllocator)
+		INTERFACE_MAP_END()
+
+		//IMemoryAllocator
+		STDMETHOD(Allocate)(IUnknown** ppBlock) override
+		{
+			if (ppBlock == nullptr) return E_POINTER;
+
+			*ppBlock = ps::com::CreateObject<MemoryBlock>(new MemoryBlock()).Detach();
+			return S_OK;
+		}
+	};
+}
+
 

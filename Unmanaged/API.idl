@@ -1,26 +1,81 @@
 import "oaidl.idl";
 import "ocidl.idl";
 
+
+
+[
+	object,
+	local,
+	uuid(A1DF52E1-642F-42F2-8117-C7E126E72BA1),
+	pointer_default(unique)
+]
+interface IMemoryBlock : IUnknown
+{
+	[propget] HRESULT Value([out, retval]int* value);
+	[propput] HRESULT Value([in]int value);
+
+	[propget] HRESULT TraceRoute([out, retval]SAFEARRAY(BSTR)* traceRoute);
+
+	HRESULT TraceProcessor([in]BSTR name);
+};
+
 [
 	object,
 	local,
 	uuid(5494BFCB-F321-4815-8D48-77CBC12CB950),
 	pointer_default(unique)
 ]
-interface IMemoryAllocator: IUnknown
+interface IMemoryAllocator : IUnknown
 {
-	HRESULT Function1([in]BSTR key,[in]VARIANT value);
-	[propget]HRESULT Property1([out,retval]int* value);
-	[propput]HRESULT Property1([in]int value);
+	HRESULT Allocate([out, retval]IUnknown **block);
+};
+
+[
+	object,
+	local,
+	uuid(C0554AAB-752D-41B1-8DEB-8E9FA24CADC6),
+	pointer_default(unique)
+]
+interface IProcessor : IUnknown
+{
+	[propget] HRESULT Id([out, retval]BSTR* id);
+
+	HRESULT Process([in]IUnknown* memoryBlock);
+};
+
+[
+	object,
+	local,
+	uuid(9930FD13-79BA-42FA-A6B7-A6669BA50BF8),
+	pointer_default(unique)
+]
+interface IDumper : IUnknown
+{
+	HRESULT DumpTraceRoute([in]IUnknown* memoryBlock, [out, retval]SAFEARRAY(BSTR)* traceRoute);
+	HRESULT DumpResult([in]IUnknown* memoryBlock, [out, retval]int *value);
 };
 
 [uuid(F98005AB-554F-4CED-ACF0-66364A1EBA4F)]
 library UnmanagedLibrary
 {
 	[uuid(8FB509AE-500E-44C0-9E83-2233A80838F0)]
-	coclass CMemoryAllocator
+	coclass MemoryAllocator
 	{
 		[default]
 		interface IMemoryAllocator;
+	}
+	
+	[uuid(201DCE94-3EE2-493C-AA8E-97B1DD8D47B1)]
+	coclass Processor
+	{
+		[default]
+		interface IProcessor;
+	}
+	
+	[uuid(F80DE37B-24D4-4147-8CFF-21B29221B23D)]
+	coclass Dumper
+	{
+		[default]
+		interface IDumper;
 	}
 }

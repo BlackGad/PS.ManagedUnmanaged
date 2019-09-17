@@ -43,9 +43,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Graphviz\Graphviz.cs" />
+    <Compile Include="Graphviz\GraphvizConfiguration.cs" />
+    <Compile Include="Graphviz\ProcessorGraph.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnmanagedHelper.cs" />
+    <Compile Include="Unmanaged\Helper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -57,7 +61,16 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <OutputItemType>Content</OutputItemType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Targets>Build;DebugSymbolsProjectOutputGroup</Targets>
     </ProjectReference>
+    <COMFileReference Include="..\API\Unmanaged.tlb">
+      <WrapperTool>tlbimp</WrapperTool>
+    </COMFileReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="QuickGraph">
+      <Version>3.6.61119.7</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

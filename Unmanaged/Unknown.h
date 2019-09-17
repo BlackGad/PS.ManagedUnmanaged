@@ -10,15 +10,18 @@ namespace ps
 		template<class T>
 		static CComPtr<IUnknown> CreateObject(REFIID riid = __uuidof(IUnknown), HRESULT* hResult = nullptr)
 		{
-			T* pObj = nullptr;
+			return CreateObject<T>(new (std::nothrow)T(), riid, hResult);
+		}
+
+		template<class T>
+		static CComPtr<IUnknown> CreateObject(T * pObj, REFIID riid = __uuidof(IUnknown), HRESULT* hResult = nullptr)
+		{
 			auto hr = S_OK;
 			CComPtr<IUnknown> result;
 
-			pObj = new (std::nothrow)T();
-
 			if (pObj == nullptr) hr = E_OUTOFMEMORY;
 			if (SUCCEEDED(hr)) hr = pObj->FinalConstruct();
-			if (SUCCEEDED(hr)) hr = pObj->QueryInterface(riid, reinterpret_cast<void**>(& result));
+			if (SUCCEEDED(hr)) hr = pObj->QueryInterface(riid, reinterpret_cast<void**>(&result));
 			if (FAILED(hr))
 			{
 				delete pObj;
