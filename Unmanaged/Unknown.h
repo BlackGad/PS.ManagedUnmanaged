@@ -111,9 +111,9 @@ namespace ps
 	        }
 
 		///////////////////////////////////////////////////////////////////////////
-		// Пример создания простого IUnknown объекта
+		// Simple IUnknown object creation example
 		// 
-		//  Определяем интерфейс в *.idl файле
+		//  Define interface in *.idl файле
 		//	[
 		//		object,
 		//		local,
@@ -124,31 +124,35 @@ namespace ps
 		//	{
 		//		HRESULT Function1([in]BSTR key,[in]VARIANT value);
 		//		[propget]HRESULT Property1([out,retval]int* value);
-		//		[propput]HRESULT Property1([in]int** value);
+		//		[propput]HRESULT Property1([in]int value);
 		//	};
 		// 
-		//	Реализация интерфейса
-		//	class TestObject:
-		//		public C_Unknown
+		//	Implement interface
+		//  namespace objects 
 		//	{
-		//	public:
-		//		TestObject(void);
-		//		~TestObject(void);
-		//	public:
-		//	
-		//		INTERFACE_MAP_BEGIN(C_Unknown)//обработка родительского класса
-		//			INTERFACE_ENTRY(ITestInterface)//обработка текущего класса
-		//		INTERFACE_MAP_END()
+		//		class TestObject: public C_Unknown, ITestInterface
+		//		{
+		//		public:
+		//			TestObject(void) {}
+		//			virtual ~TestObject(void) {}
+		//		public:
 		//		
-		//	public://ITestInterface
-		//		STDMETHOD(Function1)(BSTR key,VARIANT value);
-		//		STDMETHOD(get_Property1)(int* value);
-		//		STDMETHOD(put_Property1)(int value);
-		//	};
+		//			INTERFACE_MAP_BEGIN(C_Unknown)//обработка родительского класса
+		//				INTERFACE_ENTRY(ITestInterface)//обработка текущего класса
+		//			INTERFACE_MAP_END()
+		//			
+		//		public://ITestInterface
+		//			STDMETHOD(Function1)(BSTR key,VARIANT value) { return S_OK; }
+		//			STDMETHOD(get_Property1)(int* value) { return S_OK; }
+		//			STDMETHOD(put_Property1)(int value) { return S_OK; }
+		//		};
+		//	}
 		//
-		//	Создание объекта:
-		//
-		//	CComQIPtr<ITestInterface> piSettings = CreateObject<TestObject>(__uuidof(ITestInterface));
+		//	Object creation:
+		//	CComQIPtr<ITestInterface> piObject = ps::com::CreateObject<objects::TestObject>();
+		// 
+		//  Or another overload if constructor is not default
+		//	CComQIPtr<ITestInterface> piObject = ps::com::CreateObject<objects::TestObject>(new objects::TestObject(42));
 		// 
 		///////////////////////////////////////////////////////////////////////////
 	}
